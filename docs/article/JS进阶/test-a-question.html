@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // for...in语句以任意顺序遍历一个对象的除Symbol以外的可枚举属性，包括继承的可枚举属性。
+    // 问题
+    // ? let key in obj 会遍历到 obj 原型上的属性吗？这个判断条件有没有必要
+    // for...in语句以任意顺序遍历一个对象的除Symbol以外的可枚举属性，包括继承的可枚举属性。
+    // 对象继承的属性属于自己的属性，hasOwnProperty(key) 为 true
+
+    class Father {
+      constructor(name, age) {
+        this.name = name;
+        this.age = age
+      }
+      say() {
+        console.log('I have lots of experience.')
+      }
+    }
+
+    class Son extends Father {
+      constructor(name, score) {
+        super(name);
+        this.score = score
+      }
+      test() {
+        console.log('I love test.')
+      }
+    }
+    let cherry = new Son('lin', 18, 99)
+    console.log("cherry", cherry);
+    for (let key in cherry) {
+      console.log("key", key); // name age score
+    }
+    console.log("cherry.hasOwnProperty('name')", cherry.hasOwnProperty('name'));
+    function deepClone(obj) {
+      if (typeof obj === "object" && obj !== null) {
+        //初始化返回结果
+        let result = Array.isArray(obj) ? [] : {};
+        for (let key in obj) {
+          // 保证 key 不是原型上的属性
+          if (obj.hasOwnProperty(key)) {
+            // 递归调用
+            result[key] = deepClone(obj[key]);
+          }
+        }
+        return result;
+      } else {
+        //简单数据类型 直接 赋值
+        return obj;
+      }
+    }
+    function clone(target) {
+      if (typeof target === 'object') {
+        let cloneTarget = Array.isArray(target) ? [] : {};
+        for (const key in target) {
+          cloneTarget[key] = clone(target[key]);
+        }
+        return cloneTarget;
+      } else {
+        return target;
+      }
+    };
+    let cloneCherry = deepClone(cherry)
+    console.log("cloneCherry", cloneCherry);
+    let cloneCherry2 = clone(cherry)
+    console.log("cloneCherry2", cloneCherry2);
+  </script>
+</body>
+
+</html>
