@@ -1,17 +1,10 @@
-function clone(target, map = new Map()) {
-  if (typeof target === 'object') {
-    let cloneTarget = Array.isArray(target) ? [] : {};
-    // if (map.has(target))
-    if (map.get(target)) {
-      return map.get(target);
-    }
-    map.set(target, cloneTarget);
-    for (const key in target) {
-      cloneTarget[key] = clone(target[key], map);
-    }
-    return cloneTarget;
-  } else {
-    return target;
-  }
-};
-
+function isObject(target) {
+  const type = typeof target
+  return target !== null && (type === 'object' || type === 'function')
+}
+if (!isObject(target)) {
+  return target
+}
+function getType(target) {
+  return Object.prototype.toString.call(target)
+}
